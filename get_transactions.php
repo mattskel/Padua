@@ -1,7 +1,5 @@
 <?php
 
-//include("bank_transaction.php");
-
 $fh = fopen($_FILES['file']['tmp_name'], 'r+');
 
 function cmp($a, $b) {
@@ -30,9 +28,7 @@ function GenerateCheckCharacter($input) {
   $validChars = "23456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   $factor = 2;
   $sum = 0;
-  $n = 34;
-  //$n = count($validChars);
-  echo "HERE";
+  $n = strlen($validChars);
   for ($i = strlen($input) - 1; $i >= 0; $i--) {
     $codePoint = strpos($validChars, $input[$i]);
     $addend = $factor * $codePoint;
@@ -41,18 +37,12 @@ function GenerateCheckCharacter($input) {
     } else {
       $factor = 2;
     }
-    echo " ";
-    echo floor($addend/$n);
-    echo " ";
-    $addend = floor($addend/$n) + ($addend % $n);
-    echo $addend;
-    echo " ";
+    $addend = intval($addend/$n) + ($addend % $n);
     $sum += $addend;
   }
   $remainder = $sum % $n;
   $checkCodePoint = ($n - $remainder) % $n;
   return $validChars[$checkCodePoint];
-//  return 0;
 }
 
 $transactions = array();
@@ -66,7 +56,7 @@ while( ($row = fgetcsv($fh, 8192)) !== FALSE ) {
   $t->transaction_code = $row[1];
   $t->customer_number = $row[2];
   $t->reference = $row[3];
-  $t->amount = $row[4];
+  $t->amount = $row[4]/100;
   
   if (VerifyKey($t->transaction_code)) {
     $t->valid_transaction = "Yes";

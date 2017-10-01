@@ -1,5 +1,6 @@
 <?php
 include("bank_transaction.php");
+setlocale(LC_MONETARY, 'en_US');
 ?>
 
 <!DOCTYPE html>
@@ -15,17 +16,19 @@ include("bank_transaction.php");
   <body>
     <div class="container-fluid">
       <h1>Upload new CSV</h1>
+      <p>Select CSV to upload</p>
       <form action="" method="post" accept-charset="utf-8" enctype="multipart/form-data">
         <input type="file" name="file">
         <input type="submit" name="btn_submit" value="Upload File">
       </form>
+      <h1>Bank Transaction from CSV</h1>
       <?php
       // Loop over file data
       // Populate transaction class
       if ($_FILES['file']['size'] != 0) {
         include("get_transactions.php");
         ?>
-      <h1>Bank Transaction from CSV</h1>
+      
       <table class="table table-hover">
         <thead>
           <tr>
@@ -47,7 +50,7 @@ include("bank_transaction.php");
             <td><?php echo $t->valid_transaction; ?></td>
             <td><?php echo $t->customer_number; ?></td>
             <td><?php echo $t->reference; ?></td>
-            <td class="red"><font color="red"><?php echo $t->amount; ?></font></td>
+            <td class="red"><font color="red"><?php echo money_format('%+n', $t->amount); ?></font></td>
           </tr>
           <?php
         }
