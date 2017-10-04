@@ -2,6 +2,8 @@
 
 $fh = fopen($_FILES['file']['tmp_name'], 'r+');
 
+// Sort function
+// The function sorts by date
 function cmp($a, $b) {
   if ($a->date == $b->date) {
     return 0;
@@ -21,7 +23,6 @@ function VerifyKey($key) {
   } else {
     return false;
   }
-//  return $key[9] == $checkDigit;
 }
 
 function GenerateCheckCharacter($input) {
@@ -45,6 +46,7 @@ function GenerateCheckCharacter($input) {
   return $validChars[$checkCodePoint];
 }
 
+// The following code block reads the csv file and creates a list of BankTransactions
 $transactions = array();
 $lines = array();
 $i = 0;
@@ -70,6 +72,7 @@ while( ($row = fgetcsv($fh, 8192)) !== FALSE ) {
   $i = $i + 1;
 }
 
+// Transaction are sorted by date
 usort($transactions, 'cmp');
 
 ?>
